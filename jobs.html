@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#08060d" />
+  <meta name="description" content="Open roles at Horizon Productions." />
+  <title>Jobs | Horizon Productions</title>
+
+  <link rel="icon" type="image/png" href="Assets/favicon.png" />
+  <link rel="apple-touch-icon" href="Assets/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body data-page="jobs">
+  <div class="site-bg" aria-hidden="true">
+    <div id="tsparticles"></div>
+    <div class="aurora aurora-orange"></div>
+    <div class="aurora aurora-purple"></div>
+    <div class="stars stars-a"></div>
+    <div class="stars stars-b"></div>
+    <div class="grid-fade"></div>
+  </div>
+
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Horizon Productions home">
+      <img src="Assets/Logo.png" alt="" />
+      <span>Horizon Productions</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="/">Studio</a>
+      <a href="/games">Games</a>
+      <a href="/team">Team</a>
+      <a class="active" href="/jobs">Jobs</a>
+      <a href="/contact">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="hub-link desktop-only" href="https://discord.gg/XdaetbyZF7" target="_blank" rel="noopener noreferrer">
+        Horizon Hub <span>↗</span>
+      </a>
+
+      <button class="menu-button" id="menuButton" type="button" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-menu-inner">
+      <div class="mobile-menu-top">
+        <span>Navigate</span>
+        <button id="menuClose" type="button" aria-label="Close menu">×</button>
+      </div>
+
+      <nav>
+        <a href="/">Studio</a>
+        <a href="/games">Games</a>
+        <a href="/team">Team</a>
+        <a href="/jobs">Jobs</a>
+        <a href="/contact">Contact</a>
+      </nav>
+
+      <a class="button button-primary mobile-hub" href="https://discord.gg/XdaetbyZF7" target="_blank" rel="noopener noreferrer">
+        Join Horizon Hub
+      </a>
+    </div>
+  </div>
+
+  <main>
+    <section class="subpage-hero shell">
+      <div class="reveal">
+        <div class="eyebrow"><span class="eyebrow-line"></span> Careers</div>
+        <h1>Open roles for people who want to <span class="gradient-text">build seriously.</span></h1>
+        <p>
+          We keep openings focused. Every listing below belongs to a real production need and includes the discipline, engagement type, and application expectations.
+        </p>
+      </div>
+
+      <div class="jobs-hero-panel reveal">
+        <span>APPLICATION ROUTE</span>
+        <ol>
+          <li><i>1</i> Find a role</li>
+          <li><i>2</i> Join Horizon Hub</li>
+          <li><i>3</i> Complete application</li>
+          <li><i>4</i> Submit through website</li>
+        </ol>
+        <small>Discord ticket automation will be connected in a later phase.</small>
+      </div>
+    </section>
+
+    <section class="jobs-section shell">
+      <div class="job-toolbar reveal">
+        <div>
+          <p class="section-label">Current openings</p>
+          <h2 id="jobCount">Loading roles…</h2>
+        </div>
+
+        <div class="job-filters" id="jobFilters" aria-label="Job filters"></div>
+      </div>
+
+      <div class="jobs-grid" id="jobsGrid">
+        <div class="job-card skeleton-job"></div>
+        <div class="job-card skeleton-job"></div>
+        <div class="job-card skeleton-job"></div>
+      </div>
+
+      <div class="empty-jobs" id="emptyJobs" hidden>
+        <h3>No roles in this category right now.</h3>
+        <p>Try another discipline or check back later.</p>
+      </div>
+    </section>
+
+    <section class="jobs-process shell reveal">
+      <div>
+        <p class="section-label">How applications work</p>
+        <h2>Hub first. Application second.</h2>
+      </div>
+
+      <div class="process-line">
+        <article>
+          <span>01</span>
+          <h3>Choose a role</h3>
+          <p>Review the scope, expectations, and requirements before applying.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Join Horizon Hub</h3>
+          <p>Applicants must be in the Horizon Hub before the website unlocks the application form.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Submit details</h3>
+          <p>Complete the structured application so the team has useful context from the start.</p>
+        </article>
+        <article>
+          <span>04</span>
+          <h3>Discord workflow</h3>
+          <p>The future bot integration will post the application to the Hub and create the ticket automatically.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="job-modal" id="jobModal" aria-hidden="true">
+    <div class="job-modal-backdrop" data-close-modal></div>
+
+    <div class="job-modal-panel" role="dialog" aria-modal="true" aria-labelledby="applicationTitle">
+      <button class="modal-close" type="button" data-close-modal aria-label="Close application">×</button>
+
+      <div class="modal-role-meta">
+        <span id="applicationDepartment">ROLE</span>
+        <span id="applicationType"></span>
+      </div>
+
+      <h2 id="applicationTitle">Apply</h2>
+      <p class="modal-intro" id="applicationIntro"></p>
+
+      <div class="hub-gate" id="hubGate">
+        <div>
+          <strong>Join Horizon Hub first</strong>
+          <p>Applications are reserved for Hub members so the recruitment team can contact you there.</p>
+        </div>
+
+        <a class="button button-primary" href="https://discord.gg/XdaetbyZF7" target="_blank" rel="noopener noreferrer" id="joinHubButton">
+          Join Horizon Hub ↗
+        </a>
+
+        <label class="hub-confirm">
+          <input type="checkbox" id="hubConfirmed" />
+          <span>I have joined Horizon Hub</span>
+        </label>
+      </div>
+
+      <form id="jobApplicationForm" class="application-form" hidden>
+        <input type="hidden" id="jobRole" />
+
+        <div class="field-row">
+          <label class="field">
+            <span>Discord username</span>
+            <input id="appDiscord" type="text" maxlength="64" required placeholder="username" />
+          </label>
+
+          <label class="field">
+            <span>Roblox username</span>
+            <input id="appRoblox" type="text" maxlength="32" required placeholder="Roblox username" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Portfolio / work link</span>
+          <input id="appPortfolio" type="url" maxlength="300" required placeholder="https://..." />
+        </label>
+
+        <label class="field">
+          <span>Relevant experience</span>
+          <textarea id="appExperience" maxlength="1500" required placeholder="Tell us what you have worked on, what you were responsible for, and what you are strongest at."></textarea>
+        </label>
+
+        <label class="field">
+          <span>Why Horizon?</span>
+          <textarea id="appWhy" maxlength="1000" required placeholder="Why does this role and studio interest you?"></textarea>
+        </label>
+
+        <label class="field">
+          <span>Availability</span>
+          <input id="appAvailability" type="text" maxlength="120" required placeholder="Example: 15-20 hours/week, CET evenings" />
+        </label>
+
+        <div class="form-feedback" id="applicationFeedback" role="status"></div>
+
+        <button class="button button-primary full-button" type="submit">
+          Prepare Application
+        </button>
+
+        <p class="form-footnote">
+          Bot/ticket automation is intentionally not enabled yet. For now, submitting prepares your application and copies it so you can paste it into the Hub recruitment flow.
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <footer class="site-footer shell">
+    <a class="brand footer-brand" href="/">
+      <img src="Assets/Logo.png" alt="" />
+      <span>Horizon Productions</span>
+    </a>
+    <p>© 2026 Horizon Productions. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="/games">Games</a>
+      <a href="/team">Team</a>
+      <a href="/jobs">Jobs</a>
+      <a href="/contact">Contact</a>
+      <a href="https://discord.gg/XdaetbyZF7" target="_blank" rel="noopener noreferrer">Hub ↗</a>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tsparticles/engine@4/tsparticles.engine.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tsparticles/slim@4/tsparticles.slim.bundle.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

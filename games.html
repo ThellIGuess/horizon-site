@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#08060d" />
+  <meta name="description" content="Games by Horizon Productions." />
+
+  <title>Games | Horizon Productions</title>
+
+  <link rel="icon" type="image/png" href="Assets/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body data-page="games">
+
+  <div class="site-bg" aria-hidden="true">
+    <div id="tsparticles"></div>
+    <div class="aurora aurora-orange"></div>
+    <div class="aurora aurora-purple"></div>
+    <div class="stars stars-a"></div>
+    <div class="stars stars-b"></div>
+    <div class="grid-fade"></div>
+  </div>
+
+  <header class="site-header">
+
+    <a class="brand" href="/">
+      <img src="Assets/Logo.png" alt="" />
+      <span>Horizon Productions</span>
+    </a>
+
+    <nav class="desktop-nav">
+      <a href="/">Studio</a>
+      <a class="active" href="/games">Games</a>
+      <a href="/team">Team</a>
+      <a href="/jobs">Jobs</a>
+      <a href="/contact">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+
+      <a
+        class="hub-link desktop-only"
+        href="https://discord.gg/XdaetbyZF7"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Horizon Hub
+        <span>↗</span>
+      </a>
+
+      <button
+        class="menu-button"
+        id="menuButton"
+        type="button"
+        aria-label="Open navigation menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </div>
+
+  </header>
+
+  <div
+    class="mobile-menu"
+    id="mobileMenu"
+    aria-hidden="true"
+  >
+    <div class="mobile-menu-inner">
+
+      <div class="mobile-menu-top">
+        <span>Navigate</span>
+
+        <button
+          id="menuClose"
+          type="button"
+          aria-label="Close navigation menu"
+        >
+          ×
+        </button>
+      </div>
+
+      <nav>
+        <a href="/">Studio</a>
+        <a href="/games">Games</a>
+        <a href="/team">Team</a>
+        <a href="/jobs">Jobs</a>
+        <a href="/contact">Contact</a>
+      </nav>
+
+      <a
+        class="button button-primary mobile-hub"
+        href="https://discord.gg/XdaetbyZF7"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Join Horizon Hub
+      </a>
+
+    </div>
+  </div>
+
+  <main>
+
+    <section class="games-hero shell reveal">
+
+      <div>
+
+        <div class="eyebrow">
+          <span class="eyebrow-line"></span>
+          Games
+        </div>
+
+        <h1>
+          Games built to
+          <span class="gradient-text">hold attention.</span>
+        </h1>
+
+        <p>
+          Every Horizon title is built for retention: tight core loops, frequent updates,
+          and live numbers you can check below — pulled straight from Roblox.
+        </p>
+
+      </div>
+
+      <div class="portfolio-summary">
+
+        <span>HRZN / PORTFOLIO</span>
+
+        <div>
+          <small>Tracked titles</small>
+          <strong id="gamesTracked" data-stat="titles">5</strong>
+        </div>
+
+        <div>
+          <small>Total visits</small>
+          <strong id="portfolioVisits" data-stat="visits">Loading…</strong>
+        </div>
+
+        <div>
+          <small>Players online</small>
+          <strong id="portfolioPlaying" data-stat="playing">Loading…</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="games-showcase">
+
+      <div class="shell">
+
+        <div class="games-toolbar reveal">
+
+          <div>
+            <span class="section-label">ALL GAMES</span>
+
+            <h2>
+              Current portfolio.
+            </h2>
+          </div>
+
+          <p>Sorted by lifetime visits. Player counts refresh every time you load the page.</p>
+
+        </div>
+
+        <div
+          class="games-page-grid"
+          id="gamesPageGrid"
+        >
+
+          <article class="portfolio-game game-loading"></article>
+          <article class="portfolio-game game-loading"></article>
+          <article class="portfolio-game game-loading"></article>
+          <article class="portfolio-game game-loading"></article>
+          <article class="portfolio-game game-loading"></article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="portfolio-note shell reveal">
+
+      <span>WORK WITH HORIZON</span>
+
+      <h2>
+        Have a game that could fit our portfolio?
+      </h2>
+
+      <p>
+        For acquisition, publishing, co-development,
+        or investment conversations, contact the studio directly.
+      </p>
+
+      <a
+        class="button button-primary"
+        href="/contact"
+      >
+        Talk to Horizon
+        <span>↗</span>
+      </a>
+
+    </section>
+
+  </main>
+
+  <footer class="site-footer shell">
+
+    <a class="brand footer-brand" href="/">
+      <img src="Assets/Logo.png" alt="" />
+      <span>Horizon Productions</span>
+    </a>
+
+    <p>
+      © 2026 Horizon Productions. All rights reserved.
+    </p>
+
+    <div class="footer-links">
+      <a href="/games">Games</a>
+      <a href="/team">Team</a>
+      <a href="/jobs">Jobs</a>
+      <a href="/contact">Contact</a>
+    </div>
+
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tsparticles/engine@4/tsparticles.engine.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tsparticles/slim@4/tsparticles.slim.bundle.min.js"></script>
+  <script src="main.js"></script>
+
+</body>
+</html>
