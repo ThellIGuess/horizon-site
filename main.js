@@ -17,11 +17,6 @@ const GAMES = [
     url: "https://www.roblox.com/games/140472728510165/Anime-Ultra-X"
   },
   {
-    placeId: "90719247686306",
-    fallbackName: "Swim For Brainrot",
-    url: "https://www.roblox.com/games/90719247686306/Swim-For-Brainrot"
-  },
-  {
     placeId: "89199115862748",
     fallbackName: "Launch Rocket for Brainrots",
     url: "https://www.roblox.com/games/89199115862748/Launch-Rocket-for-Brainrots"
@@ -126,17 +121,6 @@ document.addEventListener(
 );
 
 /* =========================================================
-   HEADER SCROLL STATE
-========================================================= */
-
-const updateScrolled = () => {
-  document.body.classList.toggle("scrolled", window.scrollY > 24);
-};
-
-window.addEventListener("scroll", updateScrolled, { passive: true });
-updateScrolled();
-
-/* =========================================================
    MOBILE MENU
 ========================================================= */
 
@@ -152,6 +136,7 @@ function setMenu(open) {
   menuButton.setAttribute("aria-expanded", String(open));
 
   document.body.classList.toggle("menu-open", open);
+  lockScroll(open);
 }
 
 menuButton?.addEventListener("click", () => {
@@ -175,35 +160,276 @@ mobileMenu?.querySelectorAll("a").forEach((link) => {
 });
 
 /* =========================================================
-   SCROLL REVEALS
+   MOTION ENGINE
+   Smooth scroll (Lenis), preloader, header hide-on-scroll,
+   word-by-word heading reveals, 3D "tilt-in" cards and the
+   scroll-driven flagship expand on the home page.
 ========================================================= */
 
-const revealElements = document.querySelectorAll(".reveal");
+const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const root = document.documentElement;
+root.classList.add("js");
 
-if ("IntersectionObserver" in window) {
-  const revealObserver = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
+/* ---------- Smooth scrolling ---------- */
 
-        entry.target.classList.add("active");
-        observer.unobserve(entry.target);
+let lenis = null;
+
+if (!REDUCED_MOTION && typeof window.Lenis === "function") {
+  try {
+    lenis = new window.Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true });
+    const raf = (time) => {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    };
+    requestAnimationFrame(raf);
+
+    /* in-page anchors glide too */
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const id = link.getAttribute("href");
+        const target = id && id.length > 1 ? document.querySelector(id) : null;
+        if (!target) return;
+        event.preventDefault();
+        lenis.scrollTo(target, { offset: 0, duration: 1.4 });
       });
-    },
-    {
-      threshold: 0.08,
-      rootMargin: "0px 0px -30px"
-    }
-  );
+    });
+  } catch (error) {
+    console.warn("Smooth scroll unavailable:", error);
+    lenis = null;
+  }
+}
 
-  revealElements.forEach((element) => {
-    revealObserver.observe(element);
-  });
+function lockScroll(locked) {
+  if (!lenis) return;
+  if (locked) lenis.stop();
+  else lenis.start();
+}
+
+/* ---------- Preloader (home only) ---------- */
+
+const preloader = document.getElementById("preloader");
+
+function finishPreloader() {
+  document.body.classList.add("is-loaded");
+  if (preloader) {
+    preloader.classList.add("done");
+    setTimeout(() => preloader.remove(), 900);
+  }
+}
+
+if (preloader) {
+  let seen = false;
+  try { seen = sessionStorage.getItem("hrzn-intro") === "1"; } catch (_) { /* storage blocked */ }
+  try { sessionStorage.setItem("hrzn-intro", "1"); } catch (_) { /* storage blocked */ }
+
+  const delay = seen || REDUCED_MOTION ? 150 : 1100;
+  window.addEventListener("load", () => setTimeout(finishPreloader, delay), { once: true });
+  setTimeout(finishPreloader, 3000); // never block the page
 } else {
-  revealElements.forEach((element) => {
-    element.classList.add("active");
+  requestAnimationFrame(() => document.body.classList.add("is-loaded"));
+}
+
+/* ---------- Header: solid after scroll, hides on scroll down ---------- */
+
+let lastY = window.scrollY;
+
+function updateHeader() {
+  const y = window.scrollY;
+  document.body.classList.toggle("scrolled", y > 24);
+  const menuOpen = document.body.classList.contains("menu-open");
+  if (!menuOpen) {
+    document.body.classList.toggle("header-hidden", y > 400 && y > lastY + 2);
+    if (y < lastY - 2) document.body.classList.remove("header-hidden");
+  }
+  lastY = y;
+}
+
+/* ---------- Word-by-word heading reveal ---------- */
+
+function splitWords(element) {
+  const walk = (node) => {
+    [...node.childNodes].forEach((child) => {
+      if (child.nodeType === Node.TEXT_NODE) {
+        const parts = child.textContent.split(/(\s+)/);
+        const frag = document.createDocumentFragment();
+        parts.forEach((part) => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(" "));
+            return;
+          }
+          const mask = document.createElement("span");
+          mask.className = "w";
+          const inner = document.createElement("span");
+          inner.className = "wi";
+          inner.textContent = part;
+          mask.appendChild(inner);
+          frag.appendChild(mask);
+        });
+        child.replaceWith(frag);
+      } else if (child.nodeType === Node.ELEMENT_NODE) {
+        if (child.classList.contains("gradient-text") || child.tagName === "BR") {
+          /* keep gradients intact: reveal the whole span as one unit */
+          const mask = document.createElement("span");
+          mask.className = "w";
+          child.replaceWith(mask);
+          child.classList.add("wi");
+          mask.appendChild(child);
+        } else {
+          walk(child);
+        }
+      }
+    });
+  };
+
+  walk(element);
+  element.querySelectorAll(".wi").forEach((word, index) => {
+    word.style.setProperty("--wd", `${Math.min(index * 0.045, 0.6)}s`);
+  });
+  element.classList.add("split");
+}
+
+if (!REDUCED_MOTION) {
+  document
+    .querySelectorAll(
+      "main h1:not(.hero-title), .section-center h2, .section-head h2, .studio-copy h2, " +
+      ".hub-copy h2, .games-toolbar h2, .portfolio-note h2, .jobs-process h2, .contact-secondary h2, .job-toolbar h2"
+    )
+    .forEach((heading) => {
+      heading.classList.remove("reveal");
+      heading.closest(".reveal")?.classList.remove("reveal");
+      splitWords(heading);
+    });
+}
+
+/* ---------- Reveal on enter ---------- */
+
+const revealObserver =
+  "IntersectionObserver" in window
+    ? new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("active");
+            observer.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -40px" }
+      )
+    : null;
+
+function observeReveals(scope = document) {
+  scope.querySelectorAll(".reveal:not(.active), .split:not(.active)").forEach((el) => {
+    if (revealObserver) revealObserver.observe(el);
+    else el.classList.add("active");
   });
 }
+
+observeReveals();
+
+/* ---------- 3D tilt-in cards ---------- */
+
+let tiltItems = [];
+
+function collectTiltItems() {
+  if (REDUCED_MOTION) return;
+  tiltItems = [
+    ...document.querySelectorAll(
+      ".featured-game-grid > .portfolio-game, .games-page-grid > .portfolio-game, .team-page-grid > .person-card, .jobs-grid > .job-card"
+    )
+  ];
+  tiltItems.forEach((el) => {
+    el.classList.remove("reveal");
+    el.classList.add("tilt");
+  });
+}
+
+function updateTilt() {
+  if (!tiltItems.length) return;
+  const vh = window.innerHeight;
+  const vw = window.innerWidth;
+
+  tiltItems.forEach((el) => {
+    const rect = el.getBoundingClientRect();
+    if (rect.bottom < -100 || rect.top > vh + 100) return;
+
+    const cy = rect.top + rect.height / 2;
+    const cx = rect.left + rect.width / 2;
+    /* 0 when the card sits at 55% of the viewport, 1 when just entering */
+    const enter = Math.min(Math.max((cy - vh * 0.55) / (vh * 0.5), 0), 1);
+    const eased = enter * enter * (3 - 2 * enter);
+    const side = Math.max(-1, Math.min(1, (cx - vw / 2) / (vw / 2)));
+
+    el.style.setProperty("--rx", `${eased * 22}deg`);
+    el.style.setProperty("--ry", `${-side * eased * 26}deg`);
+    el.style.setProperty("--ty", `${eased * 90}px`);
+    el.style.setProperty("--sc", `${1 - eased * 0.08}`);
+    el.style.setProperty("--op", `${1 - eased * 0.85}`);
+  });
+}
+
+/* ---------- Flagship expand (home) ---------- */
+
+const flagshipSection = document.getElementById("flagship");
+const flagshipFrame = document.getElementById("flagshipFrame");
+
+function updateFlagship() {
+  if (!flagshipSection || !flagshipFrame) return;
+  if (REDUCED_MOTION) {
+    flagshipFrame.style.setProperty("--p", "1");
+    return;
+  }
+  const rect = flagshipSection.getBoundingClientRect();
+  const travel = rect.height - window.innerHeight;
+  const raw = travel > 0 ? -rect.top / travel : 1;
+  const p = Math.min(Math.max(raw * 1.35, 0), 1);
+  flagshipFrame.style.setProperty("--p", p.toFixed(4));
+  flagshipFrame.classList.toggle("is-open", p > 0.82);
+}
+
+/* ---------- Hero parallax ---------- */
+
+const heroInner = document.querySelector(".hero-x-inner");
+
+function updateHero() {
+  if (!heroInner || REDUCED_MOTION) return;
+  const y = window.scrollY;
+  if (y > window.innerHeight * 1.2) return;
+  heroInner.style.transform = `translate3d(0, ${y * 0.28}px, 0)`;
+  heroInner.style.opacity = String(Math.max(0, 1 - y / (window.innerHeight * 0.75)));
+}
+
+/* ---------- One scroll loop for everything ---------- */
+
+let ticking = false;
+
+function onScrollFrame() {
+  ticking = false;
+  updateHeader();
+  updateTilt();
+  updateFlagship();
+  updateHero();
+}
+
+function requestScrollFrame() {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(onScrollFrame);
+}
+
+window.addEventListener("scroll", requestScrollFrame, { passive: true });
+window.addEventListener("resize", requestScrollFrame);
+lenis?.on("scroll", requestScrollFrame);
+
+collectTiltItems();
+requestScrollFrame();
+
+/* Cards rendered later (games, jobs) join the motion system. */
+document.addEventListener("horizon:games", () => {
+  collectTiltItems();
+  observeReveals();
+  requestScrollFrame();
+});
 
 /* =========================================================
    HELPERS
@@ -308,8 +534,8 @@ async function fetchGameInfo(universeIds) {
 async function fetchGameThumbnails(universeIds) {
   /* Wide 16:9 game thumbnails first (what large studios showcase), square icons as fallback. */
   const wideEndpoints = [
-    `https://thumbnails.roproxy.com/v1/games/multiget/thumbnails?universeIds=${universeIds}&countPerUniverse=1&defaults=true&size=768x432&format=Png&isCircular=false`,
-    `https://thumbnails.roblox.com/v1/games/multiget/thumbnails?universeIds=${universeIds}&countPerUniverse=1&defaults=true&size=768x432&format=Png&isCircular=false`
+    `https://thumbnails.roproxy.com/v1/games/multiget/thumbnails?universeIds=${universeIds}&countPerUniverse=4&defaults=true&size=768x432&format=Png&isCircular=false`,
+    `https://thumbnails.roblox.com/v1/games/multiget/thumbnails?universeIds=${universeIds}&countPerUniverse=4&defaults=true&size=768x432&format=Png&isCircular=false`
   ];
 
   for (const endpoint of wideEndpoints) {
@@ -318,8 +544,10 @@ async function fetchGameThumbnails(universeIds) {
       const map = new Map();
 
       (data?.data || []).forEach((entry) => {
-        const url = entry?.thumbnails?.[0]?.imageUrl;
-        if (url) map.set(String(entry.universeId), url);
+        const urls = (entry?.thumbnails || [])
+          .filter((thumb) => thumb?.state === "Completed" && thumb.imageUrl)
+          .map((thumb) => thumb.imageUrl);
+        if (urls.length) map.set(String(entry.universeId), urls);
       });
 
       if (map.size) return map;
@@ -339,7 +567,7 @@ async function fetchGameThumbnails(universeIds) {
       return new Map(
         (data?.data || [])
           .filter((icon) => icon.imageUrl)
-          .map((icon) => [String(icon.targetId), icon.imageUrl])
+          .map((icon) => [String(icon.targetId), [icon.imageUrl]])
       );
     } catch (error) {
       console.warn("Icon endpoint failed:", error);
@@ -353,12 +581,19 @@ async function fetchGameThumbnails(universeIds) {
    GAME CARD
 ========================================================= */
 
-function buildGameCard(game, info, thumbnail, options = {}) {
-  const name = info?.name || game.fallbackName;
+function gameName(game, info) {
+  return info?.sourceName || info?.name || game.fallbackName;
+}
 
-  const description =
-    info?.description?.trim() ||
+function gameDescription(info) {
+  return (info?.sourceDescription || info?.description || "").trim() ||
     "A Horizon Productions Roblox experience.";
+}
+
+function buildGameCard(game, info, thumbnail, options = {}) {
+  const name = gameName(game, info);
+
+  const description = gameDescription(info);
 
   const hasStats = Boolean(info);
   const visits = Number(info?.visits) || 0;
@@ -443,6 +678,73 @@ function setStat(key, value, animate = true) {
    LOAD PORTFOLIO
 ========================================================= */
 
+function renderHomeShowcase(entries) {
+  /* entries are sorted by visits — entries[0] is the flagship */
+  const flagship = entries[0];
+  if (!flagship) return;
+
+  const allThumbs = entries.flatMap((e) => e.thumbnails || []);
+  const flagThumb = flagship.thumbnails?.[0] || null;
+  const name = gameName(flagship.game, flagship.info);
+
+  /* Hero pill + flagship expand section */
+  const pillMedia = document.getElementById("heroPillMedia");
+  if (pillMedia && flagThumb) {
+    pillMedia.innerHTML = `<img src="${escapeHtml(flagThumb)}" alt="" />`;
+  }
+
+  const flagshipMedia = document.getElementById("flagshipMedia");
+  if (flagshipMedia) {
+    flagshipMedia.innerHTML = flagThumb
+      ? `<img src="${escapeHtml(flagThumb)}" alt="${escapeHtml(name)}" />`
+      : `<div class="game-fallback-image"><span>${escapeHtml(name)}</span></div>`;
+  }
+
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+
+  setText("flagshipName", name);
+  setText("flagshipDesc", gameDescription(flagship.info));
+
+  if (flagship.info) {
+    setText("flagshipVisits", formatNumber(flagship.info.visits));
+    setText("flagshipPlaying", formatNumber(flagship.info.playing));
+    setText("flagshipFavs", formatNumber(flagship.info.favoritedCount));
+  }
+
+  const link = document.getElementById("flagshipLink");
+  if (link) link.href = flagship.game.url;
+
+  /* Background collage of game art */
+  const collage = document.getElementById("heroCollage");
+  if (collage && allThumbs.length) {
+    const pool = [];
+    while (pool.length < 24) pool.push(...allThumbs);
+
+    const columns = [0, 1, 2, 3, 4].map((col) => {
+      const tiles = pool
+        .slice(col * 4, col * 4 + 4)
+        .map((src) => `<div class="collage-tile"><img src="${escapeHtml(src)}" alt="" loading="lazy" /></div>`)
+        .join("");
+      /* duplicated for a seamless vertical loop */
+      return `<div class="collage-col" style="--i:${col}">${tiles}${tiles}</div>`;
+    });
+
+    collage.innerHTML = columns.join("");
+    requestAnimationFrame(() => collage.classList.add("ready"));
+  }
+
+  /* Big name marquee */
+  const marquee = document.getElementById("nameMarquee");
+  if (marquee) {
+    const names = entries.map((e) => gameName(e.game, e.info));
+    const run = names.map((n) => `<span>${escapeHtml(n)}</span><b>✦</b>`).join("");
+    marquee.innerHTML = run + run;
+  }
+}
+
 async function loadGamesData() {
   const featuredGrid = document.getElementById("featuredGameGrid");
   const gamesPageGrid = document.getElementById("gamesPageGrid");
@@ -453,15 +755,13 @@ async function loadGamesData() {
   setStat("titles", GAMES.length, false);
 
   const renderFallback = () => {
-    const cards = GAMES.map((game) => buildGameCard(game, null, null));
+    const cards = GAMES.map((game, index) => buildGameCard(game, null, null, { flagship: index === 0 }));
     if (featuredGrid) featuredGrid.innerHTML = cards.slice(0, 3).join("");
-    if (gamesPageGrid) {
-      gamesPageGrid.innerHTML = GAMES
-        .map((game, index) => buildGameCard(game, null, null, { flagship: index === 0 }))
-        .join("");
-    }
+    if (gamesPageGrid) gamesPageGrid.innerHTML = cards.join("");
+    renderHomeShowcase(GAMES.map((game) => ({ game, info: null, thumbnails: [] })));
     setStat("visits", "—");
     setStat("playing", "—");
+    document.dispatchEvent(new CustomEvent("horizon:games"));
   };
 
   try {
@@ -485,24 +785,21 @@ async function loadGamesData() {
 
     const entries = resolvedGames.map((game) => {
       const id = game.universeId ? String(game.universeId) : null;
+      const thumbnails = id ? thumbnailMap.get(id) || [] : [];
       return {
         game,
         info: id ? gameMap.get(id) || null : null,
-        thumbnail: id ? thumbnailMap.get(id) || null : null
+        thumbnails,
+        thumbnail: thumbnails[0] || null
       };
     });
 
     const totalVisits = entries.reduce((sum, e) => sum + (Number(e.info?.visits) || 0), 0);
     const totalPlaying = entries.reduce((sum, e) => sum + (Number(e.info?.playing) || 0), 0);
 
-    /* Portfolio: biggest titles first. */
+    /* Biggest title first: entries[0] is the flagship everywhere. */
     const byVisits = [...entries].sort(
       (a, b) => (Number(b.info?.visits) || 0) - (Number(a.info?.visits) || 0)
-    );
-
-    /* Home page: what's hot right now. */
-    const byPlaying = [...entries].sort(
-      (a, b) => (Number(b.info?.playing) || 0) - (Number(a.info?.playing) || 0)
     );
 
     if (gamesPageGrid) {
@@ -512,14 +809,22 @@ async function loadGamesData() {
     }
 
     if (featuredGrid) {
-      featuredGrid.innerHTML = byPlaying
-        .slice(0, 3)
-        .map((e) => buildGameCard(e.game, e.info, e.thumbnail))
+      /* Home: flagship first, then the two most-played of the rest. */
+      const [flagship, ...rest] = byVisits;
+      const hottest = rest.sort(
+        (a, b) => (Number(b.info?.playing) || 0) - (Number(a.info?.playing) || 0)
+      );
+
+      featuredGrid.innerHTML = [flagship, ...hottest.slice(0, 2)]
+        .map((e, index) => buildGameCard(e.game, e.info, e.thumbnail, { flagship: index === 0 }))
         .join("");
     }
 
+    renderHomeShowcase(byVisits);
+
     setStat("visits", totalVisits);
     setStat("playing", totalPlaying);
+    document.dispatchEvent(new CustomEvent("horizon:games"));
   } catch (error) {
     console.warn("Roblox portfolio failed to load:", error);
     renderFallback();
@@ -706,6 +1011,8 @@ function renderJobs() {
         }
       );
     });
+
+  document.dispatchEvent(new CustomEvent("horizon:games"));
 }
 
 renderJobFilters();
@@ -833,6 +1140,7 @@ function openJobModal(jobId) {
   document.body.classList.add(
     "modal-open"
   );
+  lockScroll(true);
 }
 
 function closeJobModal() {
@@ -848,6 +1156,7 @@ function closeJobModal() {
   document.body.classList.remove(
     "modal-open"
   );
+  lockScroll(false);
 }
 
 jobModal
