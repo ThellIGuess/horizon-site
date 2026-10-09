@@ -454,7 +454,7 @@ function formatNumber(value) {
   }).format(number);
 }
 
-async function fetchJson(url, timeout = 8000) {
+async function fetchJson(url, timeout = 8000, extraHeaders = {}) {
   const controller = new AbortController();
 
   const timeoutId = setTimeout(() => {
@@ -466,7 +466,8 @@ async function fetchJson(url, timeout = 8000) {
       cache: "no-store",
       signal: controller.signal,
       headers: {
-        Accept: "application/json"
+        Accept: "application/json",
+        ...extraHeaders
       }
     });
 
@@ -522,7 +523,8 @@ async function fetchGameInfo(universeIds) {
 
   for (const endpoint of endpoints) {
     try {
-      return await fetchJson(endpoint);
+      /* ask for English so names are not auto-translated per visitor */
+      return await fetchJson(endpoint, 8000, { "Accept-Language": "en-US" });
     } catch (error) {
       console.warn("Game metadata endpoint failed:", error);
     }
@@ -582,7 +584,15 @@ async function fetchGameThumbnails(universeIds) {
 ========================================================= */
 
 function gameName(game, info) {
-  return info?.sourceName || info?.name || game.fallbackName;
+  const raw = info?.sourceName || info?.name || "";
+  /* drop update tags like "[MAINTENANCE]" or "[📊 TRADING]" and stray emoji */
+  const clean = raw
+    .replace(/\[[^\]]*\]/g, "")
+    .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+  if (!clean || /unavailable/i.test(raw)) return game.fallbackName;
+  return clean;
 }
 
 function gameDescription(info) {

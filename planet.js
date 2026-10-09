@@ -35,13 +35,13 @@ if (mount && stage) {
   try {
     const R = 1.25;               // planet radius
     const RING_IN = R * 1.38;
-    const RING_OUT = R * 2.32;
+    const RING_OUT = R * 2.2;
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
-    const CAM_BASE = new THREE.Vector3(0, 0.55, 9.4);
+    const CAM_BASE = new THREE.Vector3(0, 0.6, 10.4);
     camera.position.copy(CAM_BASE);
-    camera.lookAt(0, 0, 0);
+    camera.lookAt(0, 0.3, 0);
 
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
     renderer.setClearColor(0x000000, 0);
@@ -54,7 +54,7 @@ if (mount && stage) {
     /* System tilt: planet axis and ring share it. */
     const system = new THREE.Group();
     system.rotation.z = THREE.MathUtils.degToRad(-16);
-    system.rotation.x = THREE.MathUtils.degToRad(8);
+    system.rotation.x = THREE.MathUtils.degToRad(17);
     scene.add(system);
 
     /* Ring plane normal in world space (ring lies in the system's XZ plane). */
@@ -176,7 +176,7 @@ if (mount && stage) {
 
     /* ---------- ATMOSPHERE ---------- */
     const atmosphere = new THREE.Mesh(
-      new THREE.SphereGeometry(R * 1.12, 96, 64),
+      new THREE.SphereGeometry(R * 1.16, 96, 64),
       new THREE.ShaderMaterial({
         uniforms: { uLight: { value: LIGHT_DIR } },
         vertexShader: /* glsl */ `
@@ -195,8 +195,9 @@ if (mount && stage) {
           varying vec3 vW;
           void main() {
             vec3 v = normalize(cameraPosition - vW);
-            float edge = 1.0 - abs(dot(normalize(vN), v));
-            float glow = pow(edge, 2.6);
+            /* back faces: strongest right at the planet limb, fading to 0 at the halo's edge */
+            float facing = abs(dot(normalize(vN), v));
+            float glow = pow(smoothstep(0.0, 0.5, facing), 2.2);
             float lit = smoothstep(-0.4, 0.8, dot(normalize(vN), uLight));
             vec3 c = mix(vec3(0.55, 0.32, 1.0), vec3(1.0, 0.6, 0.4), lit * 0.35);
             gl_FragColor = vec4(c, glow * (0.25 + lit * 0.75) * 0.85);
@@ -351,7 +352,7 @@ if (mount && stage) {
       renderer.setSize(rect.width, rect.height, false);
       camera.aspect = rect.width / rect.height;
       /* keep the whole ring in frame on narrow cards */
-      CAM_BASE.z = 9.4 * Math.max(1, 1.05 / camera.aspect);
+      CAM_BASE.z = 10.4 * Math.max(1, 1.25 / camera.aspect);
       camera.updateProjectionMatrix();
     };
 
@@ -364,7 +365,8 @@ if (mount && stage) {
     io.observe(stage);
     observers.push(io);
 
-    const clock = new THREE.Clock();
+    let last = performance.now();
+    let time = 0;
     const moonOrbit = new THREE.Vector3();
     let shown = false;
 
@@ -374,13 +376,13 @@ if (mount && stage) {
       if (!running) return;
       frameId = requestAnimationFrame(animate);
 
-      if (!visible || document.hidden) {
-        clock.getDelta();
-        return;
-      }
+      const now = performance.now();
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
 
-      const dt = Math.min(clock.getDelta(), 0.05);
-      const time = clock.elapsedTime;
+      if (!visible || document.hidden) return;
+
+      time += dt;
 
       if (!reducedMotion) {
         planet.rotation.y += dt * 0.09;
@@ -400,7 +402,7 @@ if (mount && stage) {
         CAM_BASE.y - current.y * 0.6,
         CAM_BASE.z
       );
-      camera.lookAt(0, 0, 0);
+      camera.lookAt(0, 0.3, 0);
 
       renderer.render(scene, camera);
 

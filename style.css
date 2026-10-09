@@ -3260,3 +3260,9 @@ html.js body.is-loaded .hero-in { opacity: 1; transform: none; }
   .collage-col, .name-marquee-track { animation: none; }
   html.js .hero-in, html.js .hero-title .hero-in { opacity: 1; transform: none; }
 }
+
+@media (max-width: 760px) {
+  .hero-title { font-size: clamp(2.8rem, 13vw, 4.4rem); }
+  .hero-title .line { white-space: normal; }
+  .hero-pill { width: 1.25em; height: .7em; }
+}
