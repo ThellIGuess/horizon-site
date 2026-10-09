@@ -356,7 +356,7 @@ function updateTilt() {
     const cy = rect.top + rect.height / 2;
     const cx = rect.left + rect.width / 2;
     /* 0 when the card sits at 55% of the viewport, 1 when just entering */
-    const enter = Math.min(Math.max((cy - vh * 0.55) / (vh * 0.5), 0), 1);
+    const enter = Math.min(Math.max((cy - vh * 0.68) / (vh * 0.45), 0), 1);
     const eased = enter * enter * (3 - 2 * enter);
     const side = Math.max(-1, Math.min(1, (cx - vw / 2) / (vw / 2)));
 
@@ -364,7 +364,7 @@ function updateTilt() {
     el.style.setProperty("--ry", `${-side * eased * 26}deg`);
     el.style.setProperty("--ty", `${eased * 90}px`);
     el.style.setProperty("--sc", `${1 - eased * 0.08}`);
-    el.style.setProperty("--op", `${1 - eased * 0.85}`);
+    el.style.setProperty("--op", `${1 - eased * 0.55}`);
   });
 }
 
