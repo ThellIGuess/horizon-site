@@ -238,8 +238,8 @@ function updateHeader() {
   document.body.classList.toggle("scrolled", y > 24);
   const menuOpen = document.body.classList.contains("menu-open");
   if (!menuOpen) {
-    document.body.classList.toggle("header-hidden", y > 400 && y > lastY + 2);
-    if (y < lastY - 2) document.body.classList.remove("header-hidden");
+    if (y > 400 && y > lastY + 2) document.body.classList.add("header-hidden");
+    else if (y < lastY - 2 || y <= 400) document.body.classList.remove("header-hidden");
   }
   lastY = y;
 }
