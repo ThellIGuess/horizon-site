@@ -755,6 +755,69 @@ function renderHomeShowcase(entries) {
   }
 }
 
+/* Stats snapshot built by GitHub every hour (same origin, never rate-limited). */
+async function loadSnapshotEntries() {
+  const snapshot = await fetchJson(`/data/games.json?t=${Math.floor(Date.now() / 600000)}`, 6000);
+  const byPlace = new Map((snapshot?.games || []).map((g) => [String(g.placeId), g]));
+
+  const entries = GAMES.map((game) => {
+    const snap = byPlace.get(String(game.placeId));
+    const thumbnails = snap?.thumbnails || [];
+    return {
+      game,
+      info: snap?.info?.name ? snap.info : null,
+      thumbnails,
+      thumbnail: thumbnails[0] || null
+    };
+  });
+
+  if (!entries.some((e) => e.info)) throw new Error("Snapshot has no game data.");
+  return entries;
+}
+
+/* Fallback: ask Roblox through the public proxy from the visitor's browser. */
+async function loadLiveEntries() {
+  const resolvedGames = await Promise.all(GAMES.map(resolveUniverse));
+  const validGames = resolvedGames.filter((game) => game.universeId !== null);
+
+  if (!validGames.length) {
+    throw new Error("No valid Roblox universe IDs were resolved.");
+  }
+
+  const universeIds = validGames.map((game) => game.universeId).join(",");
+
+  const [gameData, thumbnailMap] = await Promise.all([
+    fetchGameInfo(universeIds),
+    fetchGameThumbnails(universeIds)
+  ]);
+
+  const gameMap = new Map(
+    (gameData?.data || []).map((game) => [String(game.id), game])
+  );
+
+  const entries = resolvedGames.map((game) => {
+    const id = game.universeId ? String(game.universeId) : null;
+    const thumbnails = id ? thumbnailMap.get(id) || [] : [];
+    return {
+      game,
+      info: id ? gameMap.get(id) || null : null,
+      thumbnails,
+      thumbnail: thumbnails[0] || null
+    };
+  });
+
+  return entries;
+}
+
+async function loadEntries() {
+  try {
+    return await loadSnapshotEntries();
+  } catch (error) {
+    console.warn("Stats snapshot unavailable, trying live Roblox data:", error);
+    return loadLiveEntries();
+  }
+}
+
 async function loadGamesData() {
   const featuredGrid = document.getElementById("featuredGameGrid");
   const gamesPageGrid = document.getElementById("gamesPageGrid");
@@ -775,34 +838,7 @@ async function loadGamesData() {
   };
 
   try {
-    const resolvedGames = await Promise.all(GAMES.map(resolveUniverse));
-    const validGames = resolvedGames.filter((game) => game.universeId !== null);
-
-    if (!validGames.length) {
-      throw new Error("No valid Roblox universe IDs were resolved.");
-    }
-
-    const universeIds = validGames.map((game) => game.universeId).join(",");
-
-    const [gameData, thumbnailMap] = await Promise.all([
-      fetchGameInfo(universeIds),
-      fetchGameThumbnails(universeIds)
-    ]);
-
-    const gameMap = new Map(
-      (gameData?.data || []).map((game) => [String(game.id), game])
-    );
-
-    const entries = resolvedGames.map((game) => {
-      const id = game.universeId ? String(game.universeId) : null;
-      const thumbnails = id ? thumbnailMap.get(id) || [] : [];
-      return {
-        game,
-        info: id ? gameMap.get(id) || null : null,
-        thumbnails,
-        thumbnail: thumbnails[0] || null
-      };
-    });
+    const entries = await loadEntries();
 
     const totalVisits = entries.reduce((sum, e) => sum + (Number(e.info?.visits) || 0), 0);
     const totalPlaying = entries.reduce((sum, e) => sum + (Number(e.info?.playing) || 0), 0);
