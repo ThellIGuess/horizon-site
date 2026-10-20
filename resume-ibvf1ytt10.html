@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#09080d" />
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <meta name="googlebot" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Thell Nangalez — Résumé</title>
+  <meta name="description" content="Thell Nangalez — backend-focused Roblox developer." />
+
+  <link rel="icon" type="image/png" href="Assets/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+  <link rel="stylesheet" href="style.css?v=20261020a" />
+
+  <style>
+    .cv-header {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 14px max(16px, calc((100vw - var(--max)) / 2));
+      background: rgba(9,8,13,.78); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+    .cv-header .brand img { width: 34px; height: 34px; }
+    .cv-header .brand span { font-size: .92rem; }
+    .cv-badge {
+      color: var(--muted-2); font-size: .66rem; font-weight: 600; letter-spacing: .26em; text-transform: uppercase;
+    }
+
+    .cv-hero { padding: 90px 0 70px; display: grid; grid-template-columns: 1.3fr .7fr; gap: 50px; align-items: end; }
+    .cv-hero h1 {
+      margin: 0; font-family: var(--display); font-weight: 400; text-transform: uppercase;
+      font-size: clamp(3.6rem, 10vw, 9.5rem); line-height: .88; letter-spacing: .005em;
+    }
+    .cv-role { margin: 26px 0 0; max-width: 620px; color: var(--muted); font-size: 1.15rem; line-height: 1.65; }
+    .cv-role strong { color: var(--text); font-weight: 600; }
+    .cv-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+
+    .cv-card {
+      padding: 24px; border: 1px solid var(--line); border-radius: 22px;
+      background: radial-gradient(circle at top right, rgba(178,118,255,.12), transparent 45%), rgba(255,255,255,.03);
+    }
+    .cv-card dl { margin: 0; display: grid; gap: 16px; }
+    .cv-card dt { color: var(--muted-2); font-size: .64rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
+    .cv-card dd { margin: 5px 0 0; font-size: .98rem; }
+    .cv-card dd a { color: var(--orange-2); text-decoration: none; }
+    .copy-btn {
+      margin-left: 8px; padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px;
+      background: transparent; color: var(--muted); font-size: .66rem; cursor: pointer;
+    }
+    .copy-btn:hover { color: var(--text); border-color: var(--line-strong); }
+
+    .cv-section { padding: 80px 0; border-top: 1px solid var(--line); }
+    .cv-section > .kicker { margin-bottom: 14px; }
+    .cv-section h2 {
+      margin: 0 0 36px; font-family: var(--display); font-weight: 400; text-transform: uppercase;
+      font-size: clamp(2.4rem, 5vw, 4.4rem); line-height: .95;
+    }
+
+    .skills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .skill { padding: 22px; border: 1px solid var(--line); border-radius: 20px; background: rgba(255,255,255,.028); }
+    .skill span { color: var(--orange-2); font-family: var(--mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; }
+    .skill h3 { margin: 34px 0 0; font-family: var(--display); font-weight: 400; font-size: 1.9rem; text-transform: uppercase; }
+    .skill p { margin: 8px 0 0; color: var(--muted); font-size: .88rem; line-height: 1.55; }
+    .skill.primary { border-color: rgba(255,139,74,.35); background: linear-gradient(135deg, rgba(255,139,74,.09), rgba(178,118,255,.07)); }
+
+    .role { display: grid; grid-template-columns: 220px 1fr; gap: 30px; padding: 26px 0; border-bottom: 1px solid var(--line); }
+    .role:first-of-type { border-top: 1px solid var(--line); }
+    .role-when { color: var(--muted-2); font-family: var(--mono); font-size: .76rem; padding-top: 6px; }
+    .role h3 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 1.9rem; text-transform: uppercase; }
+    .role h3 a { color: inherit; text-decoration: none; }
+    .role .org { margin: 4px 0 0; color: var(--orange-2); font-weight: 600; font-size: .9rem; }
+    .role p { margin: 12px 0 0; color: var(--muted); line-height: 1.65; max-width: 700px; }
+    .titles { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .titles span { padding: 7px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: .78rem; color: var(--muted); }
+    .titles b { color: var(--text); font-weight: 600; margin-left: 6px; }
+
+    .samples-note { margin: -18px 0 36px; color: var(--muted-2); font-size: .88rem; }
+    .sample { border: 1px solid var(--line); border-radius: 22px; background: rgba(255,255,255,.022); overflow: hidden; }
+    .sample + .sample { margin-top: 18px; }
+    .sample-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 22px; border-bottom: 1px solid var(--line); }
+    .sample-num { color: var(--muted-2); font-family: var(--mono); font-size: .72rem; }
+    .lang { padding: 6px 11px; border-radius: 999px; font-family: var(--mono); font-size: .66rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .lang-lua { background: rgba(0,162,255,.14); color: #7cc8ff; }
+    .lang-csharp { background: rgba(178,118,255,.16); color: #cfa9ff; }
+    .lang-javascript { background: rgba(255,192,107,.14); color: var(--orange-2); }
+    .sample-body { display: grid; grid-template-columns: 300px minmax(0, 1fr); }
+    .sample-copy { padding: 24px 22px; border-right: 1px solid var(--line); }
+    .sample-copy h3 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 1.7rem; line-height: 1; text-transform: uppercase; }
+    .sample-copy p { margin: 12px 0 0; color: var(--muted); font-size: .88rem; line-height: 1.6; }
+    .sample-copy ul { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+    .sample-copy li { position: relative; padding-left: 16px; color: rgba(247,244,251,.8); font-size: .84rem; line-height: 1.5; }
+    .sample-copy li::before { content: ""; position: absolute; left: 0; top: .6em; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--purple)); }
+    .sample-copy code, .role code { font-family: var(--mono); font-size: .9em; color: var(--orange-2); }
+
+    .code { position: relative; min-width: 0; background: #0d0b12; }
+    .code pre { margin: 0; padding: 20px 22px; overflow: auto; max-height: 560px; tab-size: 4; -moz-tab-size: 4; }
+    .code code { font-family: var(--mono); font-size: .78rem; line-height: 1.6; color: #e8e2f2; white-space: pre; }
+    .code.is-collapsible:not(.open) pre { max-height: 380px; overflow: hidden; }
+    .code.is-collapsible:not(.open)::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 140px; pointer-events: none;
+      background: linear-gradient(to bottom, transparent, #0d0b12 80%);
+    }
+    .code-toggle {
+      position: absolute; left: 50%; bottom: 18px; z-index: 2; transform: translateX(-50%);
+      padding: 10px 18px; border: 1px solid var(--line-strong); border-radius: 999px;
+      background: rgba(20,16,28,.9); color: var(--text); font: 600 .74rem var(--body); letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
+    }
+    .code.open .code-toggle { position: static; transform: none; display: block; margin: 0 auto 18px; }
+    .trim { padding: 10px 22px 0; color: var(--muted-2); font-family: var(--mono); font-size: .7rem; letter-spacing: .14em; }
+
+    /* syntax colours (highlight.js classes) */
+    .hljs-keyword, .hljs-built_in.hljs-keyword { color: #c792ea; }
+    .hljs-string { color: #ffcb8b; }
+    .hljs-number, .hljs-literal { color: #ff9f6b; }
+    .hljs-comment { color: #6f6880; font-style: italic; }
+    .hljs-title, .hljs-title.function_ { color: #82aaff; }
+    .hljs-built_in, .hljs-type { color: #7fdbca; }
+    .hljs-params, .hljs-variable { color: #e8e2f2; }
+    .hljs-attr, .hljs-property { color: #b8d7ff; }
+    .hljs-operator, .hljs-punctuation { color: #a59cb8; }
+
+    .cv-footer { padding: 40px 0 60px; border-top: 1px solid var(--line); color: var(--muted-2); font-size: .8rem; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .cv-footer a { color: var(--muted); text-decoration: none; }
+
+    .toast {
+      position: fixed; left: 50%; bottom: 26px; z-index: 100; transform: translate(-50%, 20px); opacity: 0;
+      padding: 12px 18px; border-radius: 999px; background: #1a1424; border: 1px solid var(--line-strong);
+      font-size: .82rem; transition: opacity .3s ease, transform .3s ease; pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 1000px) {
+      .cv-hero { grid-template-columns: 1fr; }
+      .skills { grid-template-columns: repeat(2, 1fr); }
+      .sample-body { grid-template-columns: 1fr; }
+      .sample-copy { border-right: 0; border-bottom: 1px solid var(--line); }
+    }
+    @media (max-width: 640px) {
+      .cv-hero { padding: 60px 0 50px; }
+      .cv-badge { display: none; }
+      .skills { grid-template-columns: 1fr; }
+      .role { grid-template-columns: 1fr; gap: 8px; }
+      .code code { font-size: .72rem; }
+      .cv-actions .button { width: 100%; justify-content: space-between; }
+    }
+    @media print {
+      .cv-header, .cv-actions, .code-toggle, .site-bg { display: none !important; }
+      body { background: #fff; color: #111; }
+      .code.is-collapsible pre { max-height: none !important; }
+      .code::after { display: none !important; }
+    }
+  </style>
+</head>
+
+<body data-page="resume">
+  <div class="site-bg" aria-hidden="true">
+    <div class="aurora aurora-orange"></div>
+    <div class="aurora aurora-purple"></div>
+    <div class="grid-fade"></div>
+  </div>
+
+  <header class="cv-header">
+    <a class="brand" href="https://horizonrblx.com/">
+      <img src="Assets/Logo.png" alt="" />
+      <span>Horizon Productions</span>
+    </a>
+    <span class="cv-badge">Résumé · Shared privately</span>
+    <a class="hub-link" href="#contact">Contact <span aria-hidden="true">↓</span></a>
+  </header>
+
+  <main class="shell">
+    <section class="cv-hero">
+      <div>
+        <p class="kicker reveal">Roblox developer <i>/</i> Backend</p>
+        <h1 class="reveal">Thell<br /><span class="gradient-text">Nangalez</span></h1>
+        <p class="cv-role reveal">
+          A <strong>backend-focused programmer</strong> building Roblox systems in <strong>Luau</strong>,
+          plus web work in <strong>JavaScript</strong> and lower-level code in <strong>C/C++</strong>.
+          Chief Executive Officer of Horizon Productions.
+        </p>
+        <div class="cv-actions reveal">
+          <a class="button button-primary" href="#code">See code samples <span class="btn-ico" aria-hidden="true">↓</span></a>
+          <a class="button button-ghost" href="https://www.roblox.com/users/1450872308/profile" target="_blank" rel="noopener noreferrer">Roblox profile <span class="btn-ico" aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+
+      <aside class="cv-card reveal" id="contact">
+        <dl>
+          <div><dt>Discord</dt><dd>@thellnan <button class="copy-btn" type="button" data-copy="thellnan">Copy</button></dd></div>
+          <div><dt>Email</dt><dd><a href="mailto:tbg.dev.alt@gmail.com">tbg.dev.alt@gmail.com</a></dd></div>
+          <div><dt>Roblox</dt><dd><a href="https://www.roblox.com/users/1450872308/profile" target="_blank" rel="noopener noreferrer">Thell Nangalez ↗</a></dd></div>
+          <div><dt>Studio</dt><dd><a href="https://horizonrblx.com/" target="_blank" rel="noopener noreferrer">horizonrblx.com ↗</a></dd></div>
+        </dl>
+      </aside>
+    </section>
+
+    <section class="cv-section">
+      <p class="kicker">Skills <i>/</i> 01</p>
+      <h2>What I work in</h2>
+      <div class="skills">
+        <article class="skill primary reveal"><span>Primary</span><h3>Luau</h3><p>Server-authoritative networking, anti-exploit validation and gameplay systems.</p></article>
+        <article class="skill reveal"><span>Web</span><h3>JavaScript</h3><p>Interactive front-ends and real-time WebGL with three.js.</p></article>
+        <article class="skill reveal"><span>Web</span><h3>Web Design</h3><p>Responsive, animated sites like the Horizon Productions studio site.</p></article>
+        <article class="skill reveal"><span>Systems</span><h3>C / C++</h3><p>Lower-level and performance-minded programming.</p></article>
+      </div>
+    </section>
+
+    <section class="cv-section">
+      <p class="kicker">Experience <i>/</i> 02</p>
+      <h2>Where I've worked</h2>
+      <div class="role reveal">
+        <div class="role-when">Current</div>
+        <div>
+          <h3><a href="https://horizonrblx.com/" target="_blank" rel="noopener noreferrer">Chief Executive Officer</a></h3>
+          <p class="org">Horizon Productions · Independent Roblox studio</p>
+          <p id="studioLine">Leading a remote Roblox studio and its portfolio of live experiences.</p>
+          <div class="titles" id="studioTitles"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cv-section" id="code">
+      <p class="kicker">Code samples <i>/</i> 03</p>
+      <h2>Selected code</h2>
+      <p class="samples-note">Excerpts from real projects. Parts are intentionally trimmed so the code can't be reused as-is.</p>
+      
+      <article class="sample reveal" id="net">
+        <header class="sample-head">
+          <span class="lang lang-lua">Luau</span>
+          <span class="sample-num">01</span>
+        </header>
+        <div class="sample-body">
+          <div class="sample-copy">
+            <h3>Secure networking layer</h3>
+            <p>A wrapper around RemoteEvents and RemoteFunctions that keeps the server in charge of everything the client sends.</p>
+            <ul><li>Per-player, per-remote token-bucket rate limiting</li><li>Typed payload validation before any handler runs</li><li>Decaying strike score that kicks repeat offenders</li><li>Handlers isolated with <code>xpcall</code> so one error never takes the server down</li><li>Debug-only client checks that catch bad payloads before they ship</li></ul>
+          </div>
+          <div class="code is-collapsible">
+            <div class="trim" aria-hidden="true">· · · trimmed · · ·</div>
+            <pre><code class="language-lua">if IS_SERVER then
+	local Server = {}
+	Server.Violation = Signal.new()
+
+	local folder = Instance.new(&quot;Folder&quot;)
+	folder.Name = FOLDER_NAME
+	local remotes: { [string]: Instance } = {}
+	local handlers: { [string]: (...any) -&gt; ...any } = {}
+	local validators: { [string]: (...any) -&gt; (boolean, string?) } = {}
+	local buckets: { [Player]: { [string]: { tokens: number, last: number } } } = {}
+	local strikes: { [Player]: { score: number, last: number } } = {}
+
+	local function strike(player: Player, remoteName: string, kind: string, detail: string?)
+		local now = os.clock()
+		local entry = strikes[player]
+		if not entry then
+			entry = { score = 0, last = now }
+			strikes[player] = entry
+		end
+		local decay = (now - entry.last) / Config.Security.ViolationDecaySeconds
+		entry.score = math.max(0, entry.score - decay) + (STRIKE_WEIGHT[kind] or 1)
+		entry.last = now
+		local reason = if detail then kind .. &quot;: &quot; .. detail else kind
+		if kind ~= &quot;RateLimited&quot; and kind ~= &quot;Speed&quot; then
+			log:Warn(string.format(&quot;%s (%d) -&gt; %s rejected: %s&quot;, player.Name, player.UserId, remoteName, reason))
+		end
+		Server.Violation:Fire(player, remoteName, reason)
+		if entry.score &gt;= Config.Security.MaxViolations and player.Parent then
+			player:Kick(&quot;Disconnected: unexpected network activity.&quot;)
+		end
+	end
+	Server.Strike = strike
+
+	local function consumeToken(player: Player, remoteName: string, limit: { Count: number, Window: number }): boolean
+		local perPlayer = buckets[player]
+		if not perPlayer then
+			if not player.Parent then
+				return false
+			end
+			perPlayer = {}
+			buckets[player] = perPlayer
+		end
+		local now = os.clock()
+		local bucket = perPlayer[remoteName]
+		if not bucket then
+			bucket = { tokens = limit.Count, last = now }
+			perPlayer[remoteName] = bucket
+		end
+		bucket.tokens = math.min(limit.Count, bucket.tokens + (now - bucket.last) * (limit.Count / limit.Window))
+		bucket.last = now
+		if bucket.tokens &lt; 1 then
+			return false
+		end
+		bucket.tokens -= 1
+		return true
+	end
+
+	local function admit(player: Player, name: string, def: any, ...: any): boolean
+		if typeof(player) ~= &quot;Instance&quot; or not player:IsA(&quot;Player&quot;) or player.Parent ~= Players then
+			return false
+		end
+		if def.Direction == &quot;ToClient&quot; then
+			strike(player, name, &quot;WrongDirection&quot;)
+			return false
+		end
+		if def.RateLimit and not consumeToken(player, name, def.RateLimit) then
+			strike(player, name, &quot;RateLimited&quot;)
+			return false
+		end
+		local ok, err = validators[name](...)
+		if not ok then
+			strike(player, name, &quot;InvalidPayload&quot;, err)
+			return false
+		end
+		return true
+	end
+
+	local function runProtected(name: string, handler: (...any) -&gt; ...any, ...: any)
+		local ok, err = xpcall(handler, debug.traceback, ...)
+		if not ok then
+			log:Error(string.format(&quot;handler &#x27;%s&#x27; errored:\n%s&quot;, name, tostring(err)))
+		end
+	end
+
+	for name, def in Definitions do
+		local remote = Instance.new(CLASS_FOR_KIND[def.Kind])
+		remote.Name = name
+		remote.Parent = folder
+		remotes[name] = remote
+		validators[name] = Guard.tuple(def.Args or {})
+		if def.Kind == &quot;Function&quot; then
+			(remote :: RemoteFunction).OnServerInvoke = function(player: Player, ...)
+				if not admit(player, name, def, ...) then
+					return false, &quot;Rejected&quot;
+				end
+				local handler = handlers[name]
+				if not handler then
+					return false, &quot;Unavailable&quot;
+				end
+				local results = table.pack(xpcall(handler, debug.traceback, player, ...))
+				if not results[1] then
+					log:Error(string.format(&quot;function &#x27;%s&#x27; errored:\n%s&quot;, name, tostring(results[2])))
+					return false, &quot;InternalError&quot;
+				end
+				return true, table.unpack(results, 2, results.n)
+			end
+		else
+			(remote :: RemoteEvent).OnServerEvent:Connect(function(player: Player, ...)
+				if not admit(player, name, def, ...) then
+					return
+				end
+				local handler = handlers[name]
+				if handler then
+					task.spawn(runProtected, name, handler, player, ...)
+				end
+			end)
+		end
+	end
+
+	local existing = ReplicatedStorage:FindFirstChild(FOLDER_NAME)
+	if existing then
+		existing:Destroy()
+	end
+	folder.Parent = ReplicatedStorage
+
+	Players.PlayerRemoving:Connect(function(player)
+		buckets[player] = nil
+		strikes[player] = nil
+	end)
+
+	local function assertOutbound(name: string)
+		local def = getDefinition(name)
+		assert(def.Kind ~= &quot;Function&quot;, &quot;[Net] Functions cannot be fired from the server&quot;)
+		assert(def.Direction ~= &quot;ToServer&quot;, &quot;[Net] &#x27;&quot; .. name .. &quot;&#x27; is ToServer only&quot;)
+	end
+
+	function Server.Connect(name: string, handler: (player: Player, ...any) -&gt; ())
+		local def = getDefinition(name)
+		assert(def.Kind ~= &quot;Function&quot;, &quot;[Net] use SetHandler for Functions&quot;)
+		assert(handlers[name] == nil, &quot;[Net] &#x27;&quot; .. name .. &quot;&#x27; already has a handler&quot;)
+		handlers[name] = handler
+	end
+
+	function Server.SetHandler(name: string, handler: (player: Player, ...any) -&gt; ...any)
+		local def = getDefinition(name)
+		assert(def.Kind == &quot;Function&quot;, &quot;[Net] SetHandler is only for Functions&quot;)
+		assert(handlers[name] == nil, &quot;[Net] &#x27;&quot; .. name .. &quot;&#x27; already has a handler&quot;)
+		handlers[name] = handler
+	end
+
+	function Server.Fire(name: string, player: Player, ...: any)
+		assertOutbound(name);
+		(remotes[name] :: RemoteEvent):FireClient(player, ...)
+	end
+
+	function Server.FireAll(name: string, ...: any)
+		assertOutbound(name);
+		(remotes[name] :: RemoteEvent):FireAllClients(...)
+	end
+
+	function Server.FireList(name: string, list: { Player }, ...: any)
+		assertOutbound(name)
+		local remote = remotes[name] :: RemoteEvent
+		for _, player in list do
+			remote:FireClient(player, ...)
+		end
+	end
+
+	Net.Server = Server
+else
+	local Client = {}
+	local folder: Folder? = nil
+	local cache: { [string]: Instance } = {}
+
+	local function getRemote(name: string): Instance
+		local remote = cache[name]
+		if remote then
+			return remote
+		end
+		if not folder then
+			folder = ReplicatedStorage:WaitForChild(FOLDER_NAME, 30) :: Folder
+			assert(folder, &quot;[Net] remotes folder never replicated&quot;)
+		end
+		remote = (folder :: Folder):WaitForChild(name, 30)
+		assert(remote, &quot;[Net] remote &#x27;&quot; .. name .. &quot;&#x27; never replicated&quot;)
+		cache[name] = remote
+		return remote
+	end
+
+	local function devValidate(name: string, def: any, ...: any)
+		if Config.Debug and def.Args then
+			local ok, err = Guard.tuple(def.Args)(...)
+			if not ok then
+				error(string.format(&quot;[Net] &#x27;%s&#x27; would be rejected: %s&quot;, name, err or &quot;?&quot;), 3)
+			end
+		end
+	end
+
+	function Client.Fire(name: string, ...: any)
+		local def = getDefinition(name)
+		assert(def.Kind ~= &quot;Function&quot;, &quot;[Net] use Invoke for Functions&quot;)
+		devValidate(name, def, ...);
+		(getRemote(name) :: RemoteEvent):FireServer(...)
+	end
+
+	function Client.Invoke(name: string, ...: any): (boolean, ...any)
+		local def = getDefinition(name)
+		assert(def.Kind == &quot;Function&quot;, &quot;[Net] Invoke is only for Functions&quot;)
+		devValidate(name, def, ...)
+		local remote = getRemote(name) :: RemoteFunction
+		local results = table.pack(pcall(remote.InvokeServer, remote, ...))
+		if not results[1] then
+			return false, &quot;NetworkError&quot;
+		end
+		return table.unpack(results, 2, results.n)
+	end
+
+	function Client.Connect(name: string, handler: (...any) -&gt; ()): RBXScriptConnection
+		local def = getDefinition(name)
+		assert(def.Kind ~= &quot;Function&quot;, &quot;[Net] clients cannot handle Functions&quot;)
+		return (getRemote(name) :: RemoteEvent).OnClientEvent:Connect(handler)
+	end
+
+	Net.Client = Client
+end</code></pre>
+            <button class="code-toggle" type="button" aria-expanded="false">Show full excerpt</button>
+          </div>
+        </div>
+      </article>
+      <article class="sample reveal" id="hazard">
+        <header class="sample-head">
+          <span class="lang lang-lua">Luau</span>
+          <span class="sample-num">02</span>
+        </header>
+        <div class="sample-body">
+          <div class="sample-copy">
+            <h3>Analytic hazard collision</h3>
+            <p>Tests a player position against moving pushers and rotating sweeper arms at any time <code>t</code>, and returns the knockback vector.</p>
+            <ul><li>Pure math — no physics parts or touch events needed</li><li>Deterministic, so the server can verify hits the client reports</li><li>Pushes the player in the direction the hazard is moving</li></ul>
+          </div>
+          <div class="code">
+            <div class="trim" aria-hidden="true">· · · trimmed · · ·</div>
+            <pre><code class="language-lua">function HazardService:Test(pos: Vector3, t: number): Vector3?
+	if pos.Y &gt; JUMP_CLEAR then
+		return nil
+	end
+	for _, p in pushers do
+		local arg = p.Phase + p.Speed * t
+		local bx = p.Center.X + p.Amp * math.sin(arg)
+		if math.abs(pos.Z - p.Center.Z) &lt;= p.Half.Z + 1.3 and math.abs(pos.X - bx) &lt;= p.Half.X + 1.3 then
+			local vel = math.cos(arg)
+			local side = if math.abs(vel) &gt; 0.2 then math.sign(vel) else math.sign(pos.X - bx)
+			return Vector3.new(side * 68, 34, 0)
+		end
+	end
+	for _, s in sweepers do
+		local v = Vector3.new(pos.X - s.Center.X, 0, pos.Z - s.Center.Z)
+		if v.Magnitude &lt;= s.Radius + 2 then
+			local a = HazardService.Angle(s, t)
+			local dir = Vector3.new(math.cos(a), 0, math.sin(a))
+			local along = v:Dot(dir)
+			if (v - dir * along).Magnitude &lt;= ARM_HALF + 1 then
+				local tangent = Vector3.new(-dir.Z, 0, dir.X) * math.sign(s.Speed) * math.sign(along)
+				return tangent * 75 + Vector3.new(0, 38, 0)
+			end
+		end
+	end
+	return nil
+end</code></pre>
+            
+          </div>
+        </div>
+      </article>
+      <article class="sample reveal" id="move">
+        <header class="sample-head">
+          <span class="lang lang-csharp">C#</span>
+          <span class="sample-num">03</span>
+        </header>
+        <div class="sample-body">
+          <div class="sample-copy">
+            <h3>Sub-stepped axis movement</h3>
+            <p>Moves a body along one axis in small steps so fast objects can't tunnel through walls.</p>
+            <ul><li>Step count scales with speed</li><li>Sets wall, floor and ceiling contact flags</li><li>Raises a collision event with the hit normal</li></ul>
+          </div>
+          <div class="code">
+            <div class="trim" aria-hidden="true">· · · trimmed · · ·</div>
+            <pre><code class="language-csharp">void MoveAxis(float amount, bool horizontal, float maxStep)
+    {
+        if (amount == 0f) return;
+        var e = Owner;
+        int steps = Math.Max(1, (int)MathF.Ceiling(MathF.Abs(amount) / maxStep));
+        float step = amount / steps;
+
+        for (int i = 0; i &lt; steps; i++)
+        {
+            var prevBounds = Bounds;
+            if (horizontal) e.Position.X += step; else e.Position.Y += step;
+            if (Resolve(horizontal, step, prevBounds))
+            {
+                float dir = MathF.Sign(step);
+                if (horizontal)
+                {
+                    Velocity.X = 0f;
+                    if (dir &gt; 0) OnWallRight = true; else OnWallLeft = true;
+                    Collided?.Invoke(new Vector2(dir, 0));
+                }
+                else
+                {
+                    Velocity.Y = 0f;
+                    if (dir &gt; 0) OnFloor = true; else OnCeiling = true;
+                    Collided?.Invoke(new Vector2(0, dir));
+                }
+                return;
+            }
+        }
+    }</code></pre>
+            
+          </div>
+        </div>
+      </article>
+      <article class="sample reveal" id="probe">
+        <header class="sample-head">
+          <span class="lang lang-csharp">C#</span>
+          <span class="sample-num">04</span>
+        </header>
+        <div class="sample-body">
+          <div class="sample-copy">
+            <h3>Tilemap probe with one-way platforms</h3>
+            <p>Checks whether a body would overlap solid tiles if moved by an offset, including standing on one-way platforms.</p>
+            <ul><li>Works across every solid tilemap in the scene</li><li>Supports drop-through on one-way tiles</li><li>Tolerance check so bodies resting exactly on a tile stay grounded</li></ul>
+          </div>
+          <div class="code">
+            <div class="trim" aria-hidden="true">· · · trimmed · · ·</div>
+            <pre><code class="language-csharp"> public bool Probe(Vector2 offset)
+    {
+        var e = Owner;
+        if (e.Scene == null) return false;
+        var b = Bounds;
+        var moved = new Rectangle(b.X + offset.X, b.Y + offset.Y, b.Width, b.Height);
+        foreach (var m in e.Scene.All&lt;Tilemap&gt;())
+        {
+            if (!m.Solid) continue;
+            if (m.Overlaps(moved)) return true;
+            if (offset.Y &gt; 0 &amp;&amp; m.OneWayTiles != null &amp;&amp; !DropThrough)
+            {
+                // Standing exactly on top of a one-way tile?
+                var (x0, _, x1, _) = m.CellsIn(moved);
+                var (_, cy) = m.WorldToCell(new Vector2(b.X, b.Y + b.Height + 0.01f));
+                for (int x = x0; x &lt;= x1; x++)
+                    if (m.IsOneWayTile(m.Get(x, cy)) &amp;&amp; MathF.Abs(m.CellRect(x, cy).Y - (b.Y + b.Height)) &lt; 0.05f)
+                        return true;
+            }
+        }
+        return false;
+    }</code></pre>
+            
+          </div>
+        </div>
+      </article>
+      <article class="sample reveal" id="render">
+        <header class="sample-head">
+          <span class="lang lang-javascript">JavaScript</span>
+          <span class="sample-num">05</span>
+        </header>
+        <div class="sample-body">
+          <div class="sample-copy">
+            <h3>Real-time WebGL render loop</h3>
+            <p>The loop behind the animated 3D planet on horizonrblx.com, built with three.js.</p>
+            <ul><li>Damped, pointer-driven camera drift</li><li>Pauses rendering when off-screen or in a background tab</li><li>Responsive framing with <code>ResizeObserver</code></li><li>Respects reduced-motion settings and cleans up GPU resources</li></ul>
+          </div>
+          <div class="code is-collapsible">
+            <div class="trim" aria-hidden="true">· · · trimmed · · ·</div>
+            <pre><code class="language-javascript"> const target = { x: 0, y: 0 };
+    const current = { x: 0, y: 0 };
+
+    const onPointer = (event) =&gt; {
+      const rect = stage.getBoundingClientRect();
+      if (!rect.width) return;
+      target.x = THREE.MathUtils.clamp(((event.clientX - rect.left) / rect.width) * 2 - 1, -1.2, 1.2);
+      target.y = THREE.MathUtils.clamp(((event.clientY - rect.top) / rect.height) * 2 - 1, -1.2, 1.2);
+    };
+    window.addEventListener(&quot;pointermove&quot;, onPointer, { passive: true });
+    stage.addEventListener(&quot;pointerleave&quot;, () =&gt; { target.x = 0; target.y = 0; });
+
+    const resize = () =&gt; {
+      const rect = mount.getBoundingClientRect();
+      if (rect.width &lt; 2 || rect.height &lt; 2) return;
+      renderer.setSize(rect.width, rect.height, false);
+      camera.aspect = rect.width / rect.height;
+      /* keep the whole ring in frame on narrow cards */
+      CAM_BASE.z = 10.4 * Math.max(1, 1.25 / camera.aspect);
+      camera.updateProjectionMatrix();
+    };
+
+    const ro = new ResizeObserver(resize);
+    ro.observe(mount);
+    observers.push(ro);
+    resize();
+
+    const io = new IntersectionObserver(([entry]) =&gt; { visible = Boolean(entry?.isIntersecting); }, { threshold: 0.01 });
+    io.observe(stage);
+    observers.push(io);
+
+    let last = performance.now();
+    let time = 0;
+    const moonOrbit = new THREE.Vector3();
+    let shown = false;
+
+    if (reducedMotion) moon.position.set(-2.6, 1.1, 1.2);
+
+    const animate = () =&gt; {
+      if (!running) return;
+      frameId = requestAnimationFrame(animate);
+
+      const now = performance.now();
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+
+      if (!visible || document.hidden) return;
+
+      time += dt;
+
+      if (!reducedMotion) {
+        planet.rotation.y += dt * 0.09;
+        planetUniforms.uTime.value = time;
+        starMat.uniforms.uTime.value = time;
+
+        const a = time * 0.32;
+        moonOrbit.set(Math.cos(a) * 3.35, Math.sin(a * 0.5) * 0.25, Math.sin(a) * 3.35);
+        moon.position.copy(moonOrbit.applyQuaternion(system.quaternion));
+      }
+
+      /* damped, small camera drift — the system itself never tilts */
+      current.x += (target.x - current.x) * Math.min(1, dt * 3);
+      current.y += (target.y - current.y) * Math.min(1, dt * 3);
+      camera.position.set(
+        CAM_BASE.x + current.x * 0.9,
+        CAM_BASE.y - current.y * 0.6,
+        CAM_BASE.z
+      );
+      camera.lookAt(0, 0.3, 0);
+
+      renderer.render(scene, camera);
+
+      if (!shown) {
+        shown = true;
+        mount.classList.add(&quot;ready&quot;);
+      }
+    };
+
+    animate();
+
+    window.addEventListener(&quot;pagehide&quot;, () =&gt; {
+      running = false;
+      cancelAnimationFrame(frameId);
+      observers.forEach((o) =&gt; o.disconnect());
+      renderer.dispose();
+    }, { once: true });
+  } catch (error) {
+    fail(error);
+  }</code></pre>
+            <button class="code-toggle" type="button" aria-expanded="false">Show full excerpt</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <footer class="cv-footer">
+      <span>© 2026 Thell Nangalez</span>
+      <a href="https://horizonrblx.com/">horizonrblx.com</a>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>
+    (function () {
+      /* syntax highlighting (Luau reads fine as Lua) */
+      try { window.hljs && document.querySelectorAll("pre code").forEach(function (el) { window.hljs.highlightElement(el); }); } catch (e) {}
+
+      /* reveal on scroll */
+      var items = document.querySelectorAll(".reveal");
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("active"); io.unobserve(en.target); } });
+        }, { threshold: 0.08 });
+        items.forEach(function (el) { io.observe(el); });
+      } else { items.forEach(function (el) { el.classList.add("active"); }); }
+
+      /* expand long excerpts */
+      document.querySelectorAll(".code-toggle").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var box = btn.closest(".code");
+          var open = box.classList.toggle("open");
+          btn.setAttribute("aria-expanded", String(open));
+          btn.textContent = open ? "Collapse" : "Show full excerpt";
+          if (!open) box.closest(".sample").scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+
+      /* copy Discord handle */
+      var toast = document.getElementById("toast");
+      function say(msg) { toast.textContent = msg; toast.classList.add("show"); setTimeout(function () { toast.classList.remove("show"); }, 1800); }
+      document.querySelectorAll("[data-copy]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var text = btn.getAttribute("data-copy");
+          if (navigator.clipboard) navigator.clipboard.writeText(text).then(function () { say("Copied " + text); }, function () { say(text); });
+          else say(text);
+        });
+      });
+
+      /* live studio numbers from the hourly snapshot */
+      function fmt(n) { return new Intl.NumberFormat("en-US", { notation: n >= 10000 ? "compact" : "standard", maximumFractionDigits: 1 }).format(n || 0); }
+      function clean(name) { return String(name || "").replace(/\[[^\]]*\]/g, "").replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, "").replace(/\s{2,}/g, " ").trim(); }
+      fetch("data/games.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (snap) {
+        if (!snap || !snap.games) return;
+        var games = snap.games.filter(function (g) { return g.info && g.info.name; })
+          .sort(function (a, b) { return (b.info.visits || 0) - (a.info.visits || 0); });
+        if (!games.length) return;
+        var total = games.reduce(function (s, g) { return s + (g.info.visits || 0); }, 0);
+        document.getElementById("studioLine").textContent =
+          "Leading a remote Roblox studio whose " + games.length + " live experiences have " + fmt(total) + " combined visits.";
+        document.getElementById("studioTitles").innerHTML = games.map(function (g) {
+          var span = document.createElement("span");
+          span.textContent = clean(g.info.sourceName || g.info.name);
+          var b = document.createElement("b");
+          b.textContent = fmt(g.info.visits) + " visits";
+          span.appendChild(b);
+          return span.outerHTML;
+        }).join("");
+      }).catch(function () {});
+    })();
+  </script>
+</body>
+</html>
