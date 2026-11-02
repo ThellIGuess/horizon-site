@@ -1445,7 +1445,7 @@ contactForm?.addEventListener(
 
     const gmailUrl =
       `https://mail.google.com/mail/?view=cm&fs=1` +
-      `&to=tbg.dev.alt@gmail.com` +
+      `&to=contact@horizonrblx.com` +
       `&su=${subject}` +
       `&body=${body}`;
 
@@ -1458,7 +1458,7 @@ contactForm?.addEventListener(
 
     if (!popup) {
       window.location.href =
-        `mailto:tbg.dev.alt@gmail.com?subject=${subject}&body=${body}`;
+        `mailto:contact@horizonrblx.com?subject=${subject}&body=${body}`;
     }
   }
 );
